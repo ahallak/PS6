@@ -36,16 +36,9 @@ public class MainApp extends Application {
     private Stage primaryStage;
     private BorderPane rootLayout;
     
-    /**
-     * The data as an observable list of Persons.
-     */
     private ObservableList<Person> personData = FXCollections.observableArrayList();
 
-    /**
-     * Constructor
-     */
     public MainApp() {
-        // Add some sample data
     	
     	ArrayList<PersonDomainModel> people = PersonDAL.getPersons();
     	
@@ -63,8 +56,7 @@ public class MainApp extends Application {
     public void start(Stage primaryStage) {
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle("AddressApp");
-        
-        // Set the application icon.
+  
         this.primaryStage.getIcons().add(new Image("file:resources/images/address_book_32.png"));
 
         initRootLayout();
@@ -72,10 +64,7 @@ public class MainApp extends Application {
         showPersonOverview();
     }
 
-    /**
-     * Initializes the root layout and tries to load the last opened
-     * person file.
-     */
+
     public void initRootLayout() {
         try {
             // Load root layout from fxml file.
@@ -84,11 +73,9 @@ public class MainApp extends Application {
                     .getResource("view/RootLayout.fxml"));
             rootLayout = (BorderPane) loader.load();
 
-            // Show the scene containing the root layout.
             Scene scene = new Scene(rootLayout);
             primaryStage.setScene(scene);
 
-            // Give the controller access to the main app.
             RootLayoutController controller = loader.getController();
             controller.setMainApp(this);
 
@@ -97,16 +84,12 @@ public class MainApp extends Application {
             e.printStackTrace();
         }
 
-        // Try to load last opened person file.
         File file = getPersonFilePath();
         if (file != null) {
             loadPersonDataFromFile(file);
         }
     }
 
-    /**
-     * Shows the person overview inside the root layout.
-     */
     public void showPersonOverview() {
         try {
             // Load person overview.
@@ -125,16 +108,7 @@ public class MainApp extends Application {
             e.printStackTrace();
         }
     }
-    
-    
-    /**
-     * Opens a dialog to edit details for the specified person. If the user
-     * clicks OK, the changes are saved into the provided person object and true
-     * is returned.
-     * 
-     * @param person the person object to be edited
-     * @return true if the user clicked OK, false otherwise.
-     */
+
     public boolean showPersonEditDialog(Person person) {
         try {
             // Load the fxml file and create a new stage for the popup dialog.
@@ -167,10 +141,7 @@ public class MainApp extends Application {
             return false;
         }
     }
-    
-    /**
-     * Opens a dialog to show birthday statistics.
-     */
+
     public void showBirthdayStatistics() {
         try {
             // Load the fxml file and create a new stage for the popup.
@@ -198,13 +169,6 @@ public class MainApp extends Application {
         }
     }
     
-    /**
-     * Returns the person file preference, i.e. the file that was last opened.
-     * The preference is read from the OS specific registry. If no such
-     * preference can be found, null is returned.
-     * 
-     * @return
-     */
     public File getPersonFilePath() {
         Preferences prefs = Preferences.userNodeForPackage(MainApp.class);
         String filePath = prefs.get("filePath", null);
@@ -214,13 +178,7 @@ public class MainApp extends Application {
             return null;
         }
     }
-
-    /**
-     * Sets the file path of the currently loaded file. The path is persisted in
-     * the OS specific registry.
-     * 
-     * @param file the file or null to remove the path
-     */
+    
     public void setPersonFilePath(File file) {
         Preferences prefs = Preferences.userNodeForPackage(MainApp.class);
         if (file != null) {
@@ -236,12 +194,6 @@ public class MainApp extends Application {
         }
     }
     
-    /**
-     * Loads person data from the specified file. The current person data will
-     * be replaced.
-     * 
-     * @param file
-     */
     public void loadPersonDataFromFile(File file) {
         try {
             JAXBContext context = JAXBContext
@@ -267,11 +219,6 @@ public class MainApp extends Application {
         }
     }
 
-    /**
-     * Saves the current person data to the specified file.
-     * 
-     * @param file
-     */
     public void savePersonDataToFile(File file) {
         try {
             JAXBContext context = JAXBContext
@@ -279,16 +226,13 @@ public class MainApp extends Application {
             Marshaller m = context.createMarshaller();
             m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 
-            // Wrapping our person data.
             PersonListWrapper wrapper = new PersonListWrapper();
             wrapper.setPersons(personData);
 
-            // Marshalling and saving XML to the file.
             m.marshal(wrapper, file);
 
-            // Save the file path to the registry.
             setPersonFilePath(file);
-        } catch (Exception e) { // catches ANY exception
+        } catch (Exception e) {
         	Alert alert = new Alert(AlertType.ERROR);
         	alert.setTitle("Error");
         	alert.setHeaderText("Could not save data");
@@ -297,11 +241,7 @@ public class MainApp extends Application {
         	alert.showAndWait();
         }
     }
-
-    /**
-     * Returns the main stage.
-     * @return
-     */
+    
     public Stage getPrimaryStage() {
         return primaryStage;
     }
