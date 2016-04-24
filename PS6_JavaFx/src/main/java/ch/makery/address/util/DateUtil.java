@@ -1,8 +1,13 @@
 package ch.makery.address.util;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.Date;
 
 /**
  * Helper functions for handling dates.
@@ -12,7 +17,7 @@ import java.time.format.DateTimeParseException;
 public class DateUtil {
 
     /** The date pattern that is used for conversion. Change as you wish. */
-    private static final String DATE_PATTERN = "dd.MM.yyyy";
+    private static final String DATE_PATTERN = "yyyy-MM-dd";
 
     /** The date formatter. */
     private static final DateTimeFormatter DATE_FORMATTER = 
@@ -30,6 +35,12 @@ public class DateUtil {
             return null;
         }
         return DATE_FORMATTER.format(date);
+    }
+    
+    public static Date convertToDate(LocalDate date) {
+    	Date convertedDate = java.sql.Date.valueOf(date);
+    	return convertedDate;
+
     }
 
     /**

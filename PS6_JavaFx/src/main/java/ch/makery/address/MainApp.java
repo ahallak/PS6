@@ -51,7 +51,7 @@ public class MainApp extends Application {
     	
     	for (PersonDomainModel p: people)
     	{
-    		personData.add(new Person(p.getFirstName(),p.getLastName(), p.getStreet(), p.getPostalCode(),p.getCity(), p.getBirthday()));
+    		personData.add(new Person(p.getPersonID(),p.getFirstName(),p.getLastName(), p.getStreet(), p.getPostalCode(),p.getCity(), p.getBirthday()));
     	}
     }
 
@@ -125,6 +125,7 @@ public class MainApp extends Application {
             e.printStackTrace();
         }
     }
+    
     
     /**
      * Opens a dialog to edit details for the specified person. If the user

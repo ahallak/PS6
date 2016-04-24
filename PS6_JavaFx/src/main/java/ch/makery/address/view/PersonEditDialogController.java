@@ -70,17 +70,20 @@ public class PersonEditDialogController {
      */
     public void setPerson(Person person) {
         this.person = person;
+        if (person.getFirstName() == null) {
+        	return;
+        }
 
         firstNameField.setText(person.getFirstName());
         lastNameField.setText(person.getLastName());
         streetField.setText(person.getStreet());
         postalCodeField.setText(Integer.toString(person.getPostalCode()));
         cityField.setText(person.getCity());
-        birthdayField.setText(DateUtil.format(person.getBirthday()));
-        birthdayField.setPromptText("dd.mm.yyyy");
+        birthdayField.setText(DateUtil.format(DateUtil.parse(person.getBirthday().toString())));
+        birthdayField.setPromptText("yyyy-mm-dd");
         
     	//PS6 - Calling the addPerson method
-    	PersonDAL.updatePerson(person);  
+    	//PersonDAL.updatePerson(person);  
     }
 
     /**
@@ -105,7 +108,7 @@ public class PersonEditDialogController {
             person.setStreet(streetField.getText());
             person.setPostalCode(Integer.parseInt(postalCodeField.getText()));
             person.setCity(cityField.getText());
-            person.setBirthday(DateUtil.parse(birthdayField.getText()));
+            person.setBirthday(DateUtil.convertToDate(DateUtil.parse(birthdayField.getText())));
             okClicked = true;
             dialogStage.close();
         }
@@ -156,7 +159,7 @@ public class PersonEditDialogController {
             errorMessage += "No valid birthday!\n";
         } else {
             if (!DateUtil.validDate(birthdayField.getText())) {
-                errorMessage += "No valid birthday. Use the format dd.mm.yyyy!\n";
+                errorMessage += "No valid birthday. Use the format yyyy-mm-dd!\n";
             }
         }
         
