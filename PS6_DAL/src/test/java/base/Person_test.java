@@ -17,10 +17,12 @@ import domain.PersonDomainModel;
 
 public class Person_test {
 
-	private static PersonDomainModel per1;
-	private static PersonDomainModel per2;
+	private static PersonDomainModel p1;
+	private static PersonDomainModel p2;
 
 	@BeforeClass
+	
+	//allows date creation
 	public static void setUpBeforeClass() throws Exception {
 
 		Date bDate = null;
@@ -29,14 +31,14 @@ public class Person_test {
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
-
-		per1 = new PersonDomainModel();
-		per1.setFirstName("Amjed");
-		per1.setLastName("Hallak");
-		per1.setBirthday(bDate);
-		per1.setCity("Hockessin");
-		per1.setPostalCode(19707);
-		per1.setStreet("88 Chandler");
+		//creating new model of a person
+		p1 = new PersonDomainModel();
+		p1.setFirstName("Amjed");
+		p1.setLastName("Hallak");
+		p1.setBirthday(bDate);
+		p1.setCity("Hockessin");
+		p1.setPostalCode(19707);
+		p1.setStreet("88 Chandler");
 
 		Date bDate2 = null;
 		try {
@@ -44,19 +46,20 @@ public class Person_test {
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
-
-		per2 = new PersonDomainModel();
-		per2.setFirstName("FirstName");
-		per2.setLastName("LastName");
-		per2.setBirthday(bDate2);
-		per2.setCity("PersonCity");
-		per2.setPostalCode(19707);
-		per2.setStreet("PersonStreett");
+		//second test person
+		p2 = new PersonDomainModel();
+		p2.setFirstName("FirstName");
+		p2.setLastName("LastName");
+		p2.setBirthday(bDate2);
+		p2.setCity("PersonCity");
+		p2.setPostalCode(19707);
+		p2.setStreet("PersonStreett");
 
 	}
 	
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {
+		//removing from database
 		PersonDomainModel per = null;
 		ArrayList<PersonDomainModel> pers = PersonDAL.getPersons();
 		if (pers.size() >= 1) {
@@ -78,8 +81,9 @@ public class Person_test {
 	public void tearDown() throws Exception {
 		PersonDomainModel per = null;
 		try {
-			PersonDAL.deletePerson(per1.getPersonID());
-			per = PersonDAL.getPerson(per1.getPersonID());
+			//attempt of removing from db
+			PersonDAL.deletePerson(p1.getPersonID());
+			per = PersonDAL.getPerson(p1.getPersonID());
 			assertNull("Person isn't in db anymore", per);
 		} catch (IllegalArgumentException e) {
 			assertNull("No one present in db", per);
@@ -88,67 +92,71 @@ public class Person_test {
 
 	@Test
 	public void addPersonTest() {
+		//test adding a person
 		PersonDomainModel per;
-		per = PersonDAL.getPerson(per1.getPersonID());
+		per = PersonDAL.getPerson(p1.getPersonID());
 		assertNull("No one present in db", per);
-		PersonDAL.addPerson(per1);
+		PersonDAL.addPerson(p1);
 
-		per = PersonDAL.getPerson(per1.getPersonID());
-		System.out.println(per1.getPersonID() + " found");
+		per = PersonDAL.getPerson(p1.getPersonID());
+		System.out.println(p1.getPersonID() + " found");
 		assertNotNull("Person added to db", per);
 	}
 
 	@Test
 	public void updatePersonTest() {
+		//test changing person attributes
 		PersonDomainModel per;
 		final String newLastName = "Last";
-		final String oldLastName = per1.getLastName();
+		final String oldLastName = p1.getLastName();
 
-		per = PersonDAL.getPerson(per1.getPersonID());
+		per = PersonDAL.getPerson(p1.getPersonID());
 		assertNull("No one present ind db", per);
-		PersonDAL.addPerson(per1);
+		PersonDAL.addPerson(p1);
 
-		per1.setLastName(newLastName);
-		PersonDAL.updatePerson(per1);
+		p1.setLastName(newLastName);
+		PersonDAL.updatePerson(p1);
 
-		per = PersonDAL.getPerson(per1.getPersonID());
+		per = PersonDAL.getPerson(p1.getPersonID());
 
-		assertTrue("Last name has changed", per1.getLastName() == newLastName);
-		assertFalse("Last name has changed", per1.getLastName() == oldLastName);
+		assertTrue("Last name has changed", p1.getLastName() == newLastName);
+		assertFalse("Last name has changed", p1.getLastName() == oldLastName);
 	}
 
 	@Test
 	public void deletePersonTest() {
+		//test for removing people from database
 		PersonDomainModel per;
-		per = PersonDAL.getPerson(per1.getPersonID());
+		per = PersonDAL.getPerson(p1.getPersonID());
 		assertNull("No one present in db", per);
 
-		PersonDAL.addPerson(per1);
-		per = PersonDAL.getPerson(per1.getPersonID());
-		System.out.println(per1.getPersonID() + " found");
+		PersonDAL.addPerson(p1);
+		per = PersonDAL.getPerson(p1.getPersonID());
+		System.out.println(p1.getPersonID() + " found");
 		assertNotNull("Person added to db", per);
 
-		PersonDAL.deletePerson(per1.getPersonID());
-		per = PersonDAL.getPerson(per1.getPersonID());
+		PersonDAL.deletePerson(p1.getPersonID());
+		per = PersonDAL.getPerson(p1.getPersonID());
 		assertNull("No one present in db", per);
 
 	}
 
 	@Test
 	public void getPersonsTest() {
+		//get person information
 		PersonDomainModel per;
 		ArrayList<PersonDomainModel> pers = new ArrayList<PersonDomainModel>();
-		per = PersonDAL.getPerson(per1.getPersonID());
+		per = PersonDAL.getPerson(p1.getPersonID());
 		assertNull("No one present in db", per);
-		PersonDAL.addPerson(per1);
+		PersonDAL.addPerson(p1);
 
-		per = PersonDAL.getPerson(per1.getPersonID());
-		System.out.println(per1.getPersonID() + " found");
+		per = PersonDAL.getPerson(p1.getPersonID());
+		System.out.println(p1.getPersonID() + " found");
 		assertNotNull("Person added to db", per);
-		PersonDAL.addPerson(per2);
+		PersonDAL.addPerson(p2);
 
-		per = PersonDAL.getPerson(per2.getPersonID());
-		System.out.println(per1.getPersonID() + " also found");
+		per = PersonDAL.getPerson(p2.getPersonID());
+		System.out.println(p1.getPersonID() + " also found");
 		assertNotNull("Person added to db", per);
 
 		pers = PersonDAL.getPersons();
